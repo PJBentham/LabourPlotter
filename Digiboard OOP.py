@@ -105,7 +105,11 @@ class Day:                                  			#Day takes 2 args - 'day', which 
         mymap = pygmapsedit.maps(53.644638, -2.526855, 6)
         for i in self.jobs:
             job = self.jobs[i]
+<<<<<<< HEAD
             info = "<img style = 'float: left' src='icon-job.png'><div style = 'display: inline-block; width: 200px'>"\
+=======
+            info = "<img style = 'float: left' src="any_picture"><div style = 'display: inline-block; width: 200px'>"\
+>>>>>>> 781b713bc6ddf1a6dc66d83f9e02ce8b7e890cbf
             "<p><b>Job Number:</b> " +job[0]+"</p>"\
             "<p><b>Client:</b> "+job[1]+"</p>"\
             "<p><b>Location:</b> "+job[2]+"</p>"\
@@ -175,7 +179,11 @@ class Rollout:
         mymap = pygmapsedit.maps(53.644638, -2.526855, 6)
         for i in self.jobs:
             job = self.jobs[i]
+<<<<<<< HEAD
             info = "<img style = 'float: left' src='icon-job.png'><div style = 'display: inline-block; width: 200px'>"\
+=======
+            info = "<img style = 'float: left' src="any_picture"><div style = 'display: inline-block; width: 200px'>"\
+>>>>>>> 781b713bc6ddf1a6dc66d83f9e02ce8b7e890cbf
             "<p><b>Job Number:</b> " +job[0]+"</p>"\
             "<p><b>Postcode:</b> "+job[1]+"</p>"\
             "<p><b>Distance to Next Store:</b> "+job[3]+"</p>"\
@@ -186,12 +194,27 @@ class Rollout:
 
 #--------------------------------------------------------#
 # Code for Rollouts:
+<<<<<<< HEAD
 workbook = xlrd.open_workbook('Example Rollout.xls')
 team1 = workbook.sheet_by_name('Team 1')
 
 Team1 = Rollout(team1, 'Team 1')
 
 Team1.plotjobs()
+=======
+#workbook = xlrd.open_workbook('your_rollout.xls')
+#team1 = workbook.sheet_by_name('Team 1')
+#team2 = workbook.sheet_by_name('Team 2')
+#team20 = workbook.sheet_by_name('Team 20')
+
+#Team1 = Rollout(team1, 'Team 1')
+#Team2 = Rollout(team2, 'Team 2')
+#Team20 = Rollout(team20, 'Team 20')
+
+#Team1.plotjobs()
+#Team2.plotjobs()
+#Team20.plotjobs()
+>>>>>>> 781b713bc6ddf1a6dc66d83f9e02ce8b7e890cbf
 
 #--------------------------------------------------------#
 
