@@ -108,7 +108,7 @@ class Day:                                  			#Day takes 2 args - 'day', which 
 <<<<<<< HEAD
             info = "<img style = 'float: left' src='icon-job.png'><div style = 'display: inline-block; width: 200px'>"\
 =======
-            info = "<img style = 'float: left' src="any_picture"><div style = 'display: inline-block; width: 200px'>"\
+            info = "<img style = 'float: left' src='icon-job.png'><div style = 'display: inline-block; width: 200px'>"\
 >>>>>>> 781b713bc6ddf1a6dc66d83f9e02ce8b7e890cbf
             "<p><b>Job Number:</b> " +job[0]+"</p>"\
             "<p><b>Client:</b> "+job[1]+"</p>"\
@@ -182,7 +182,7 @@ class Rollout:
 <<<<<<< HEAD
             info = "<img style = 'float: left' src='icon-job.png'><div style = 'display: inline-block; width: 200px'>"\
 =======
-            info = "<img style = 'float: left' src="any_picture"><div style = 'display: inline-block; width: 200px'>"\
+            info = "<img style = 'float: left' src='icon-job.png'><div style = 'display: inline-block; width: 200px'>"\
 >>>>>>> 781b713bc6ddf1a6dc66d83f9e02ce8b7e890cbf
             "<p><b>Job Number:</b> " +job[0]+"</p>"\
             "<p><b>Postcode:</b> "+job[1]+"</p>"\

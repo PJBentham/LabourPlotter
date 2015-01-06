@@ -130,7 +130,7 @@ class maps:
 <<<<<<< HEAD
             f.write('\t\tvar img = "icon-job.png";\n') #replace with comment above  to go back to default icon
 =======
-            f.write('\t\tvar img = "https://dl.dropboxusercontent.com/u/55888592/tsf-logo.gif";\n') #replace with comment above  to go back to default icon
+            f.write('\t\tvar img = "https://media.licdn.com/media/p/7/005/0a3/2df/19ebee6.png";\n') #replace with comment above  to go back to default icon
 >>>>>>> 781b713bc6ddf1a6dc66d83f9e02ce8b7e890cbf
         if windowtext !=None:
 			f.write('\t\tvar info = '+'"'+windowtext+'"'+';\n')
