@@ -127,11 +127,7 @@ class maps:
     def drawpoint(self,f,lat,lon,color,title,windowtext,num):
         f.write('\t\tvar latlng = new google.maps.LatLng(%f, %f);\n'%(lat,lon))
         if num !=None:
-<<<<<<< HEAD
-            f.write('\t\tvar img = "icon-job.png";\n') #replace with comment above  to go back to default icon
-=======
             f.write('\t\tvar img = "https://media.licdn.com/media/p/7/005/0a3/2df/19ebee6.png";\n') #replace with comment above  to go back to default icon
->>>>>>> 781b713bc6ddf1a6dc66d83f9e02ce8b7e890cbf
         if windowtext !=None:
 			f.write('\t\tvar info = '+'"'+windowtext+'"'+';\n')
         f.write('\t\tvar infowindow = new google.maps.InfoWindow({\n')
