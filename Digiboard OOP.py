@@ -230,8 +230,8 @@ def getroute(start, allpoints):
 
 #-----------------------------------------------------#
 # Code for the Boards:
-#~ workbook = xlrd.open_workbook('Digital Board.xls')
-#~ sunday = workbook.sheet_by_name('Sunday')
+workbook = xlrd.open_workbook('Digital Board.xls')
+sunday = workbook.sheet_by_name('Sunday')
 # monday = workbook.sheet_by_name('Monday')
 # tuesday = workbook.sheet_by_name('Tuesday')
 # wednesday = workbook.sheet_by_name('Wednesday')
@@ -239,14 +239,17 @@ def getroute(start, allpoints):
 # friday = workbook.sheet_by_name('Friday')
 # saturday = workbook.sheet_by_name('Saturday')
 
-#~ Sunday = Day(sunday, 'sunday')
-#~ 
-#~ routelist = []
-#~ for i in range(0, len(Sunday.locations)):
-	#~ routelist.append(Sunday.locations[i])
+Sunday = Day(sunday, 'sunday')
+
+routelist = []
+for i in range(0, len(Sunday.locations)):
+    routelist.append(Sunday.locations[i])
 	
-#print routelist
-#~ print getroute(Sunday.locations[1], Sunday.locations)
+print routelist
+print getroute(Sunday.locations[1], Sunday.locations)
+
+Sunday.plotjobs()
+
 # Monday = Day(monday, 'monday')
 # Monday.plotjobs()
 # Tuesday = Day(tuesday, 'tuesday')
@@ -263,16 +266,16 @@ def getroute(start, allpoints):
 
 #--------------------------------------------------------#
 # Code for Rollouts:
-workbook = xlrd.open_workbook('sainsbury.xls')
-team1 = workbook.sheet_by_name('TSF1')
+# workbook = xlrd.open_workbook('sainsbury.xls')
+# team1 = workbook.sheet_by_name('TSF1')
 #~ team2 = workbook.sheet_by_name('Team 2')
 #~ team20 = workbook.sheet_by_name('Team 20')
 
-Team1 = Rollout(team1, 'Team 1')
+# Team1 = Rollout(team1, 'Team 1')
 #~ Team2 = Rollout(team2, 'Team 2')
 #~ Team20 = Rollout(team20, 'Team 20')
 
-Team1.plotjobs()
+# Team1.plotjobs()
 #~ Team2.plotjobs()
 #~ Team20.plotjobs()
 
