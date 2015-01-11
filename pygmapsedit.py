@@ -50,7 +50,7 @@ class maps:
         f.write('\tgoogle.maps.event.addDomListener(window, "load", initialize);\n')
         f.write('</script>\n')
         f.write('</head>\n')
-        f.write('<body style="margin:0px; padding:0px;" onload="initialize()">\n')
+        f.write('<body style="margin:0px; padding:0px;">\n') # onload="initialize()"
         f.write('\t<div id="map_canvas" style="width: 100%; height: 100%;"></div>\n')
         f.write('</body>\n')
         f.write('</html>\n')
@@ -126,8 +126,10 @@ class maps:
 
     def drawpoint(self,f,lat,lon,color,title,windowtext,num):
         f.write('\t\tvar latlng = new google.maps.LatLng(%f, %f);\n'%(lat,lon))
-        if num !=None:
-            f.write('\t\tvar img = "https://media.licdn.com/media/p/7/005/0a3/2df/19ebee6.png";\n') #replace with comment above  to go back to default icon
+        if num == None:
+            f.write('\t\tvar img = "https://dl.dropboxusercontent.com/u/55888592/tsf-logo.gif";\n')
+        else:
+            f.write('\t\tvar img = "https://dl.dropboxusercontent.com/u/55888592/marker'+num+'.png";\n')
         if windowtext !=None:
 			f.write('\t\tvar info = '+'"'+windowtext+'"'+';\n')
         f.write('\t\tvar infowindow = new google.maps.InfoWindow({\n')

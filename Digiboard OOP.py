@@ -1,5 +1,6 @@
 import pygmapsedit, csv, xlrd, datetime, time
 from geopy import geocoders
+from math import *
 
 geocode =   geocoders.GoogleV3()
             #geocoders.Yahoo('sqrWssjV34Gt8SyEoXHOljAbjI.w2o09XBQnDwu8wdhJP.rRHAhMRL1xTYjiZaqP')
@@ -10,20 +11,21 @@ pclatlng = {}
 with open('postcodes.csv', 'rb') as f:
     reader = csv.reader(f)
     for row in reader:
-        pclatlng[row[0]] = row[1], row[2]
+        pclatlng[row[0]] = row[1], row[2]   #putting the info from postcodes.cv into a dictionary with the postcodes as the key and lat and long as values
 
-class Day:                                  			#Day takes 2 args - 'day', which is a worksheet variable,
-    def __init__(self, day, name):          	#and name, which is used for the filename (must be a string)
+class Day:                                  #Day takes 2 args - 'day', which is a worksheet variable,
+    def __init__(self, day, name):          #and name, which is used for the produced html files name (therefore must be a string).
         self.day = day
         self.name = name
-        self.jobs = {}
-        self.no_jobs = 0
-        self.start_row = 2
-        self.last_row = self.day.nrows
+        self.jobs = {}                      #empty dictionary to put jobs into
+        self.no_jobs = 0                    #no of jobs
+        self.start_row = 2                  #starting on the 3rd row (to skip header rows in excel sheet)
+        self.last_row = self.day.nrows      #getting total number of rows from excel sheet (nrows is an xlrd function - http://www.lexicon.net/sjmachin/xlrd.html#xlrd.Sheet.nrows-attribute)
+                                            #date to get date info of excel sheet, not currently being used...  
         self.date = str(str(xlrd.xldate_as_tuple(day.cell_value(0,0),0)[2])+"."+str(xlrd.xldate_as_tuple(day.cell_value(0,0),0)[1])+"."+str(xlrd.xldate_as_tuple(day.cell_value(0,0),0)[0]))
 
-        for i in range(self.start_row,self.last_row):
-            try:
+        for i in range(self.start_row,self.last_row):   #for loop to pull the jobs from the excel sheet and put them into the 'jobs' dictionary
+            try:                    
                 self.jobs[i-1] =   [str(self.day.cell_value(i,0)).upper(), \
                                     str(self.day.cell_value(i,1)).upper(), \
                                     str(self.day.cell_value(i,2)).upper(), \
@@ -44,7 +46,7 @@ class Day:                                  			#Day takes 2 args - 'day', which 
                                     str(self.day.cell_value(i,17)).upper(), \
                                     str(self.day.cell_value(i,18)).upper()]
             except ValueError:
-                print "It look's like one of your 'time' cells is incorrect!"
+                print "It look's like one of your 'time' cells is incorrect! ensure it is in the following format: 8:00, 23:00 etc..."
                 self.jobs[i-1] =   [str(self.day.cell_value(i,0)).upper(), \
                                     str(self.day.cell_value(i,1)).upper(), \
                                     str(self.day.cell_value(i,2)).upper(), \
@@ -65,31 +67,37 @@ class Day:                                  			#Day takes 2 args - 'day', which 
                                     str(self.day.cell_value(i,17)).upper(), \
                                     str(self.day.cell_value(i,18)).upper()]
 
-        self.no_jobs = len(self.jobs)
+        self.no_jobs = len(self.jobs) 
 
         for i in self.jobs:
             multiple={}
             job = self.jobs[i]
-            postcode = job[1]
-            placename = job[3]
+            postcode = job[3]
+            placename = job[2]
+            parsed = False
             try:
                 if postcode in pclatlng:
-                    job.insert(2,(pclatlng[postcode][0],pclatlng[postcode][1]))   
+                    job.insert(2,(pclatlng[postcode][0],pclatlng[postcode][1]))             #if the postcode is present in the csv, append the lat and long to the job
                 else:
-                    result = [geocode.geocode(placename,exactly_one=None)]
-                    if len(result[0])>1:
+                    result = [geocode.geocode(placename,exactly_one=None)]                  #if the postcode isn't present in the csv, geocode the placename...  
+                    if len(result[0])>1:                                                    #if there is more than one result for the geocode, give the user an option to choose which one they need 
                         multiple[placename] = geocode.geocode(placename,exactly_one=None)
-                        favourite = raw_input("Multiple points found for this address, please choose one of the following (number & enter): \n"+",\n".join([str(a)+":"+str(b) for a,b in enumerate(multiple[placename])])+"\n>") #http://stackoverflow.com/questions/7301040/pulling-raw-input-options-form-a-list
-                        placename = multiple[placename][int(favourite)][0]
-                        job.insert(2,geocode.geocode(placename,exactly_one=None)[0][1])    
+                        while not parsed:
+							try:
+								favourite = int(raw_input("Multiple points found for this address, please choose one of the following (number & enter): \n"+",\n".join([str(a)+":"+str(b) for a,b in enumerate(multiple[placename])])+"\n>")) #http://stackoverflow.com/questions/7301040/pulling-raw-input-options-form-a-list
+								placename = multiple[placename][int(favourite)][0]
+								job.insert(2,geocode.geocode(placename,exactly_one=None)[0][1])    
+								parsed = True
+							except (ValueError, IndexError):
+								print "Invalid Value!"	
                     else:
                         job.insert(2,geocode.geocode(placename,exactly_one=None)[0][1])
-                        time.sleep(2)
+                        time.sleep(2)                                                                           
             except ValueError as error_message:
-                print("Error: geocode failed on input %s with message %s"%(placename, error_message))
-                continue 
+                print("Error: geocode failed on input %s with message %s"%(placename, error_message))   
+                continue
 
-        self.job_numbers = []
+        self.job_numbers = []                                #code to create lists of other information should it be needed...                                        
         self.clients = []
         self.locations = []
         self.postcodes = []
@@ -102,13 +110,13 @@ class Day:                                  			#Day takes 2 args - 'day', which 
             self.latlngs.append(self.jobs[i-1][3])
 
     def plotjobs(self):
-        mymap = pygmapsedit.maps(53.644638, -2.526855, 6)
+        mymap = pygmapsedit.maps(53.644638, -2.526855, 6) #centre the map on Peterlee
         for i in self.jobs:
-            job = self.jobs[i]
-            info = "<img style = 'float: left' src='icon-job.png'><div style = 'display: inline-block; width: 200px'>"\
+            job = self.jobs[i]                            #create marker for each job on the current sheet  
+            info = "<img style = 'float: left' src='http://www.tsf.uk.com/wp-content/themes/default/images/tsf-logo.gif'><div style = 'display: inline-block; width: 200px'>"\
             "<p><b>Job Number:</b> " +job[0]+"</p>"\
             "<p><b>Client:</b> "+job[1]+"</p>"\
-            "<p><b>Location:</b> "+job[2]+"</p>"\
+            "<p><b>Location:</b> "+job[3]+"</p>"\
             "<p><b>Postcode:</b> "+job[4]+"</p>"\
             "<p><b>Start Time:</b> "+job[5]+"</p>"\
             "<p><b>No of Men:</b> "+job[6]+"</p>"\
@@ -119,8 +127,8 @@ class Day:                                  			#Day takes 2 args - 'day', which 
             +job[13]+": "+job[14]+", "\
             +job[15]+": "+job[16]+", "\
             +job[17]+": "+job[18]+"</p>"\
-            "<p><b>Job Information: </b>"+job[19]+"</div>"
-            mymap.addpoint(float(job[3][0]), float(job[3][1]), "#0000FF",None,info,None)
+            "<p><b>Job Information: </b>"+job[19]+"</div>" #info variable updates the "window" which shows up when the marker is clicked
+            mymap.addpoint(float(job[2][0]), float(job[2][1]), "#0000FF",None,info,None)
         mymap.draw("./"+str(self.name)+"'s Labour.html")
 
 class Rollout:                                  
@@ -154,6 +162,7 @@ class Rollout:
             job = self.jobs[i]
             postcode = job[1]
             placename = job[3]
+            parsed = False
             try:
                 if postcode in pclatlng:
                     job.insert(2,(pclatlng[postcode][0],pclatlng[postcode][1]))   
@@ -161,9 +170,14 @@ class Rollout:
                     result = [geocode.geocode(placename,exactly_one=None)]
                     if len(result[0])>1:
                         multiple[placename] = geocode.geocode(placename,exactly_one=None)
-                        favourite = raw_input("Multiple points found for this address, please choose one of the following (number & enter): \n"+",\n".join([str(a)+":"+str(b) for a,b in enumerate(multiple[placename])])+"\n>") #http://stackoverflow.com/questions/7301040/pulling-raw-input-options-form-a-list
-                        placename = multiple[placename][int(favourite)][0]
-                        job.insert(2,geocode.geocode(placename,exactly_one=None)[0][1])    
+                        while not parsed:
+							try:
+								favourite = int(raw_input("Multiple points found for this address, please choose one of the following (number & enter): \n"+",\n".join([str(a)+":"+str(b) for a,b in enumerate(multiple[placename])])+"\n>")) #http://stackoverflow.com/questions/7301040/pulling-raw-input-options-form-a-list
+								placename = multiple[placename][int(favourite)][0]
+								job.insert(2,geocode.geocode(placename,exactly_one=None)[0][1])    
+								parsed = True
+							except (ValueError, IndexError):
+								print "Invalid Value!"	
                     else:
                         job.insert(2,geocode.geocode(placename,exactly_one=None)[0][1])
                         time.sleep(2)
@@ -175,7 +189,7 @@ class Rollout:
         mymap = pygmapsedit.maps(53.644638, -2.526855, 6)
         for i in self.jobs:
             job = self.jobs[i]
-            info = "<img style = 'float: left' src='icon-job.png'><div style = 'display: inline-block; width: 200px'>"\
+            info = "<img style = 'float: left' src='http://www.tsf.uk.com/wp-content/themes/default/images/tsf-logo.gif'><div style = 'display: inline-block; width: 200px'>"\
             "<p><b>Job Number:</b> " +job[0]+"</p>"\
             "<p><b>Postcode:</b> "+job[1]+"</p>"\
             "<p><b>Distance to Next Store:</b> "+job[3]+"</p>"\
@@ -184,37 +198,40 @@ class Rollout:
             mymap.addpoint(float(job[2][0]), float(job[2][1]), "#0000FF",None,info,str(int(float(self.jobs[i][0]))))
         mymap.draw("./"+str(self.name)+"'s Route.html")    
 
-#--------------------------------------------------------#
-# Code for Rollouts:
-<<<<<<< HEAD
-workbook = xlrd.open_workbook('Example Rollout.xls')
-team1 = workbook.sheet_by_name('Team 1')
+def gethypot(latlng):
+    hypot = sqrt(pow(latlng[0],2)+pow(latlng[1],2))
+    return hypot
 
-Team1 = Rollout(team1, 'Team 1')
+def getdistance(point1, point2):
+    lat_apart = float(point2[0]) - float(point1[0])
+    lng_apart = float(point2[1]) - float(point1[1])
+    distance = gethypot([lat_apart,lng_apart])
+    return distance
 
-Team1.plotjobs()
-=======
-#workbook = xlrd.open_workbook('your_rollout.xls')
-#team1 = workbook.sheet_by_name('Team 1')
-#team2 = workbook.sheet_by_name('Team 2')
-#team20 = workbook.sheet_by_name('Team 20')
+def getclosestpoint(start, points):
+    allpoints = points
+    distances = []
+    allpoints.remove(start)
+    shortest = 0
+    for i in range(0,len(allpoints)):
+        distances.append(getdistance(start,allpoints[i]))       
+        if getdistance(start,allpoints[i]) == min(distances):
+            shortest = allpoints[i]
+    return shortest
 
-#Team1 = Rollout(team1, 'Team 1')
-#Team2 = Rollout(team2, 'Team 2')
-#Team20 = Rollout(team20, 'Team 20')
-
-#Team1.plotjobs()
-#Team2.plotjobs()
-#Team20.plotjobs()
->>>>>>> 781b713bc6ddf1a6dc66d83f9e02ce8b7e890cbf
-
-#--------------------------------------------------------#
-
+def getroute(start, allpoints):
+    routelist = [start]
+    points = allpoints
+    next = getclosestpoint(start, points)
+    while points:
+        routelist.append(next)
+        next = getclosestpoint(next, points)
+    return routelist
 
 #-----------------------------------------------------#
 # Code for the Boards:
-# workbook = xlrd.open_workbook('your_labour.xls')
-# sunday = workbook.sheet_by_name('Sunday')
+#~ workbook = xlrd.open_workbook('Digital Board.xls')
+#~ sunday = workbook.sheet_by_name('Sunday')
 # monday = workbook.sheet_by_name('Monday')
 # tuesday = workbook.sheet_by_name('Tuesday')
 # wednesday = workbook.sheet_by_name('Wednesday')
@@ -222,8 +239,14 @@ Team1.plotjobs()
 # friday = workbook.sheet_by_name('Friday')
 # saturday = workbook.sheet_by_name('Saturday')
 
-# Sunday = Day(sunday, 'sunday')
-# Sunday.plotjobs()
+#~ Sunday = Day(sunday, 'sunday')
+#~ 
+#~ routelist = []
+#~ for i in range(0, len(Sunday.locations)):
+	#~ routelist.append(Sunday.locations[i])
+	
+#print routelist
+#~ print getroute(Sunday.locations[1], Sunday.locations)
 # Monday = Day(monday, 'monday')
 # Monday.plotjobs()
 # Tuesday = Day(tuesday, 'tuesday')
@@ -237,3 +260,20 @@ Team1.plotjobs()
 # Saturday = Day(saturday, 'saturday')
 # Saturday.plotjobs()
 #----------------------------------------------------#
+
+#--------------------------------------------------------#
+# Code for Rollouts:
+workbook = xlrd.open_workbook('sainsbury.xls')
+team1 = workbook.sheet_by_name('TSF1')
+#~ team2 = workbook.sheet_by_name('Team 2')
+#~ team20 = workbook.sheet_by_name('Team 20')
+
+Team1 = Rollout(team1, 'Team 1')
+#~ Team2 = Rollout(team2, 'Team 2')
+#~ Team20 = Rollout(team20, 'Team 20')
+
+Team1.plotjobs()
+#~ Team2.plotjobs()
+#~ Team20.plotjobs()
+
+#--------------------------------------------------------#

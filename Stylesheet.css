@@ -1,0 +1,123 @@
+#header
+{
+    width: 100%;
+    background-color: white;
+}
+
+h3
+{
+    margin: auto;
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+    font-size: 25px;
+    color: #003A6F;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+p
+{
+    margin: auto;
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+    font-size: 18px;
+    color: #003A6F;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body 
+{
+    display:block
+    width: 80%;
+    height: 100%;
+    margin: auto;
+    text-align: center;
+    background-image: url("map.png");
+    background-size:100% 100%;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    background-position:center; 
+    font-family: Arial, Helvetica, sans-serif;    
+}
+
+#nav 
+{
+    width: 66%;
+    display: block
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 5px;
+    color: white;
+    border-style: solid;
+    border-width: 4px;
+    border-color: black;
+    border-top: thick single black;
+    border-left: thick single black;
+    border-right: thick single black;     
+    background-color: #003A6F;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#nav ul
+{
+    list-style-type:none;
+    overflow: hidden;
+    padding: 0 0 0 2px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#nav ul li
+{   
+    list-style-type: none;
+    display: inline-block;
+    padding: 0 10px;
+    margin: 0 auto;
+    height: 30px;
+    text-align: center; 
+    font-weight: bold;
+    font-size: 1.2em;
+    line-height: 30px;
+    text-decoration: none;
+    cursor: pointer;
+    border-left: 1px solid white
+}
+
+#nav ul li:hover
+{   
+    color:#00B0DA;
+}
+
+#main
+{
+    height: 100%;
+}
+
+#main iframe
+{
+    width: 66%;
+    height: 94.5%;
+    overflow: hidden;
+    margin-bottom: 5px;
+    text-align: center;
+    border-style: solid;
+    border-width: 4px;
+    border-top: thick single white;
+    border-bottom: thick single black;
+    border-left: thick single black;
+    border-right: thick single black;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top: none;
+    border-color: black;
+    
+}
+
+*{
+    border: none;
+    margin: none;
+    padding: none;
+}
