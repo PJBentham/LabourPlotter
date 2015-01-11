@@ -129,7 +129,7 @@ class maps:
         if num == None:
             f.write('\t\tvar img = "icon.png";\n')
         else:
-            f.write('\t\tvar img = "markers/marker'+num+'.png";\n')
+            f.write('\t\tvar img = "markers/red'+num+'.png";\n')
         if windowtext !=None:
 			f.write('\t\tvar info = '+'"'+windowtext+'"'+';\n')
         f.write('\t\tvar infowindow = new google.maps.InfoWindow({\n')
