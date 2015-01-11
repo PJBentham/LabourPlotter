@@ -12,6 +12,7 @@ class maps:
         self.grids = None
         self.paths = []
         self.points = []
+        self.info = []
         self.radpoints = []
         self.gridsetting = None
         self.coloricon = 'http://chart.apis.google.com/chart?cht=mm&chs=12x16&chco=FFFFFF,XXXXXX,000000&ext=.png'
@@ -21,6 +22,7 @@ class maps:
 
     def addpoint(self, lat, lng, color = '#FF0000', title = None, info = None, num = None):
         self.points.append((lat,lng,color[1:],title,info,num))
+        self.info.append((lat,lng,color[1:],title,info,num))
 
     #def addpointcoord(self, coord):
     #    self.points.append((coord[0],coord[1]))
@@ -51,7 +53,10 @@ class maps:
         f.write('</script>\n')
         f.write('</head>\n')
         f.write('<body style="margin:0px; padding:0px;">\n') # onload="initialize()"
-        f.write('\t<div id="map_canvas" style="width: 100%; height: 100%;"></div>\n')
+        f.write('\t<div id="map_canvas" style="width: 75%; height: 100%; float: left;"></div>\n')
+        f.write('\t<div id="info" style="width: 25%; height: 100%; padding-left: 0px; float: right; overflow: scroll;">\n')
+        self.addinfo(f)
+        f.write('</div>\n')
         f.write('</body>\n')
         f.write('</html>\n')
         f.close()
@@ -79,8 +84,12 @@ class maps:
             self.drawPolyline(f,line,strokeColor = "#000000")
 
     def drawpoints(self,f):
-        for point in  self.points:
+        for point in self.points:
             self.drawpoint(f,point[0],point[1],point[2],point[3],point[4],point[5])
+
+    def addinfo(self,f):
+        for data in self.info:
+            self.adddata(f,data[0],data[1],data[2],data[3],data[4],data[5])
 
     def drawradpoints(self, f):
         for rpoint in self.radpoints:
@@ -148,6 +157,10 @@ class maps:
         f.write('\t\t\tinfowindow.setContent(this.content);\n')
         f.write('\t\t\tinfowindow.open(map,this);\n')
         f.write('\t\t});\n')
+    
+    def adddata(self,f,lat,lon,color,title,windowtext,num):
+        if windowtext !=None:
+            f.write('\t\t'+windowtext+'\n')
 
     def drawPolyline(self,f,path,\
             clickable = False, \

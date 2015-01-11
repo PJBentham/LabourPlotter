@@ -189,12 +189,13 @@ class Rollout:
         mymap = pygmapsedit.maps(53.644638, -2.526855, 6)
         for i in self.jobs:
             job = self.jobs[i]
-            info = "<img style = 'float: left' src='http://www.tsf.uk.com/wp-content/themes/default/images/tsf-logo.gif'><div style = 'display: inline-block; width: 200px'>"\
+            info = "<div style = 'display: inline-block; margin: 5px; padding 5px;>"\
             "<p><b>Job Number:</b> " +job[0]+"</p>"\
             "<p><b>Postcode:</b> "+job[1]+"</p>"\
             "<p><b>Distance to Next Store:</b> "+job[3]+"</p>"\
             "<p><b>Store Name:</b> "+job[4]+"</p>"\
-            "<p><b>Store Address:</b> "+job[5]+"</p>"
+            "<p><b>Store Address:</b> "+job[5]+"</p>"\
+            "</div>"
             mymap.addpoint(float(job[2][0]), float(job[2][1]), "#0000FF",None,info,str(int(float(self.jobs[i][0]))))
         mymap.draw("./"+str(self.name)+"'s Route.html")    
 
